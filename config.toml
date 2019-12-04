@@ -20,7 +20,7 @@ theme = "hugo-sustain"
   custom_js  = []
 
 [params.social]
-  Github        = "i'm a racist"
+  Github        = "username"
   Email         = "email@example.com"
   Twitter       = "i'm a racist"
   LinkedIn      = "username"
@@ -35,8 +35,8 @@ theme = "hugo-sustain"
   identifier = "blog"
   url = "/blog/"
 [[menu.main]]
-  name = "projects"
-  identifier = "projects"
+  name = "acts of racism"
+  identifier = "acts of racism"
   weight = 200
   url = "/projects/"
 [[menu.main]]

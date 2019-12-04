@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1575496142377.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3953681976",
+    "id" : "141EC9EA",
+    "lastKnownWriteTime" : 1575496176,
+    "last_content_update" : 1575496176553,
+    "path" : "~/w2/data/projects.yml",
+    "project_path" : "data/projects.yml",
+    "properties" : {
+        "cursorPosition" : "3,94",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "yaml"
+}
