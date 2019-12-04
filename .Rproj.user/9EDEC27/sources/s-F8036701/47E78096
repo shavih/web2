@@ -1,22 +1,24 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1575488346391.000,
+    "created" : 1575494513312.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "202645311",
-    "id" : "170F950",
+    "hash" : "0",
+    "id" : "47E78096",
     "lastKnownWriteTime" : 1575487851,
     "last_content_update" : 1575487851,
-    "path" : "~/w2/content/projects.md",
-    "project_path" : "content/projects.md",
+    "path" : "~/w2/themes/hugo-sustain/README.md",
+    "project_path" : "themes/hugo-sustain/README.md",
     "properties" : {
+        "cursorPosition" : "78,0",
+        "scrollLine" : "70"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 3,
+    "relative_order" : 5,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "markdown"

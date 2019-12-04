@@ -1,6 +1,6 @@
 baseurl = "https://example.com/"
 languageCode = "en-US"
-title = "Chris Turner"
+title = "Scout's World"
 # Enable comments by entering your Disqus shortname
 disqusShortname = ""
 # Enable Google Analytics by entering your tracking code
@@ -11,18 +11,18 @@ theme = "hugo-sustain"
   post = "/:year/:month/:day/:slug"
 
 [params]
-  avatar = "garbage.png"
-  author = "Shavi Hewage"
-  description = "Describe your website"
+  avatar = "scoot.png"
+  author = "Scout"
+  description = "it's scout's world and we're all living in it"
 
   # Custom assets can be linked with their paths relative to static/
   custom_css = []
   custom_js  = []
 
 [params.social]
-  Github        = "username"
+  Github        = "i'm a racist"
   Email         = "email@example.com"
-  Twitter       = "username"
+  Twitter       = "i'm a racist"
   LinkedIn      = "username"
   Stackoverflow = "username"
   Medium        = "username"
