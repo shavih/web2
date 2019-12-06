@@ -1,0 +1,224 @@
+---
+title: "EDA Project"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(fig.align="center", fig.height=5,fig.width=8, message=FALSE, warning=FALSE, tidy=TRUE)
+devtools::install_github("hadley/emo")
+```
+
+##### _Shavi Hewage (SH42727)_
+##### _SDS 348 Computational Biology_
+##### _October 20, 2019_
+
+### `r emo::ji("canada")` Introduction `r emo::ji("america")`
+
+In recent years, the YouTube Trending page has been one of the more controversial topics amongst users of the site. This is mostly because the manner in which videos appear on the Trending page is a mystery (in 2018, for example, the website Polygon wrote an [article](https://www.polygon.com/2018/2/21/17035758/how-does-youtube-trending-work-parkland) about the controversy surrounding offensive videos surfacing on this page).  
+I chose this particular dataset because I spend a lot of time on YouTube, and I was curious to see how Trending videos differ by country. I always assumed that it would be similar (at least between the United States and Canada, since the culture of these countries is essentially alike.) I also wanted to look at how various factors contributed to the success of a video (and its subsequent appearance on the Trending page.)
+
+The following project explores the videos that appear on the Trending page of YouTube in the United States, compared to the YouTube trending page of our northern neighbors (Canada). The dataset was acquired from [Kaggle]("https://www.kaggle.com/datasnaek/youtube-new/data#"), and contains variables that identify the name of the video (by title and unique ID), the channel which posted it, the date on which it was trending, the date and time it was published, a link to the thumbnail of the video, the tags, and the description of the video.   
+In addition, it contains the amount of views the video recieved, as well as the amount of likes, dislikes, and comments. Furthermore, it specifies if the video was removed at any time, if ratings were disabled, and if comments were disabled.  
+Finally, there is also a category_ID, which is a number that corresponds to a category of YouTube video. This will be matched to the name of the category from a separate file that was acquired alongside the data.  
+  
+This data was originally collected using a script that "[scraped] the most relevant information from videos that [were] currently trending on YouTube." The data spans between November of 2017 and May of 2018.  
+    
+  
+### `r emo::ji("television")`Loading Packages and Data`r emo::ji("pencil")`  
+  
+In this chunk, I read in the data and packages that are being used for the rest of the project. In the original dataset, categories were listed under "category ID," which was a number. However, I wanted the names of the categories that corresponded to the number, which were included in a separate JSON file.  
+I did not write the code that retrieved the category title from the category ID number. I used code by Eddie Cano from [here](https://www.kaggle.com/datasnaek/youtube-new/discussion/50240#331078). 
+
+```{r}
+#LOAD PACKAGES
+library(tidyverse)
+library(ggplot2)
+library(rjson)
+
+#LOAD DATA
+USvideos <- read.csv("/Users/shavihewage/Downloads/youtube-new/USvideos.csv")
+categories.us <- fromJSON(file="/Users/Shavihewage/Downloads/youtube-new/US_category_id.json")
+CAvideos <- read.csv("/Users/shavihewage/Downloads/youtube-new/CAvideos.csv")
+categories.ca <- fromJSON(file="/Users/Shavihewage/Downloads/youtube-new/CA_category_id.json")
+
+# RECOVERING VIDEO CATEGORIES
+cat.dict <- sapply(categories.us$items, FUN=function(l){
+  id <- l$id
+  category <- l$snippet$title
+  return(c(id,category))
+})
+
+cat.dict <- data.frame(t(cat.dict))
+colnames(cat.dict) <- c("category_id","category_title")
+cat.dict$category_id <- as.numeric(cat.dict$category_id)
+rownames(cat.dict) <- cat.dict$category_id
+
+cat.dict2 <- sapply(categories.ca$items, FUN=function(l){
+  id <- l$id
+  category <- l$snippet$title
+  return(c(id,category))
+})
+
+cat.dict2 <- data.frame(t(cat.dict2))
+colnames(cat.dict2) <- c("category_id","category_title")
+cat.dict2$category_id <- as.numeric(cat.dict2$category_id)
+rownames(cat.dict2) <- cat.dict2$category_id
+
+# ASSIGNING CATEGORIES TO VIDEOS
+USvideos$category_title <- cat.dict[USvideos$category_id,]$category_title
+CAvideos$category_title <- cat.dict2[CAvideos$category_id,]$category_title
+
+```
+
+### `r emo::ji("broom")`Tidying and Joining `r emo::ji("link")`
+
+In the above chunk, I first started out by removing some variables I was not going to be using (_category_ID_, along with _description_, the date/time of publishing (_publish_time_), and a link to the thumbnail of the video, _thumbnail_link_)   
+Then, I added a new variable that specified the country in which the video was trending, called _origin_.
+
+```{r}
+#United States
+US2 <- USvideos %>% select(-c("thumbnail_link", "description", "category_id", "tags", "publish_time")) %>%
+  mutate(origin="US")
+
+#Canada
+CA2 <- CAvideos %>% select(-c("thumbnail_link", "category_id", "tags", "publish_time", "description")) %>%
+  mutate(origin="CA")
+```
+#  
+#  
+In this step I combined the data for trending videos in the United States with the data for trending videos in Canada. I used a full join because I wanted to be able to see the differences between the two countries' trending videos. Therefore, there were no variables dropped during the join. However, the United States trending data did have about 100 more variables than its Canadian counterpart.
+In order to make it so that the variables did not auto-suffix, I specified all the variable names in `by=`.
+
+```{r, echo=FALSE, warning=FALSE}
+data <- US2 %>%full_join(CA2, by=c("origin","video_id", "trending_date", "title", "channel_title",                        "views","likes","dislikes","comment_count","comments_disabled","ratings_disabled",
+                           "video_error_or_removed","category_title"))
+```
+
+```{r}
+glimpse(data)
+```
+
+### `r emo::ji("racehorse")` Wrangling `r emo::ji("cowboy")`
+
+In this chunk, I'm generating summary statistics. For each numeric variable ( _views_, _comment_count_ , _likes_, and _dislikes_), statistics that are being summarized are mean, standard deviation, counts, quantiles (which include the minimum and maximum value, and the median), the number of distinct observations, and a correlation matrix.  
+  
+This first chunk summarizes the four numeric variables in the dataset overall.
+
+```{r}
+#OVERALL
+VLDC <- data %>% rename(comms=comment_count) %>%
+  summarize(counts=n(), distinct_vids=n_distinct(views),
+            mean_views=mean(views), sd_views = sd(views),
+            median_views=median(views),min_views=min(views), max_views=max(views),
+           
+            mean_likes=mean(likes), sd_likes = sd(likes),median_likes=median(likes),
+            min_likes=min(likes), max_likes=max(likes),
+            
+            mean_dislikes=mean(dislikes), sd_dislikes = sd(dislikes),median_dislikes=median(dislikes),
+            min_dislikes=min(dislikes), max_dislikes=max(dislikes),
+            
+            mean_comments=mean(comms), sd_comments = sd(comms),median_comments=median(comms),
+            min_comments=min(comms), max_comments=max(comms))
+glimpse(VLDC)
+```
+  
+##### Correlation of Numeric Variables
+
+A correlation matrix was generated using `cor`, and then converted to a dataframe. `Rownames_to_column` creates a new column out of the names of the rows. Then, `pivot_longer` takes the names of all the columns (except the first, which is _rowname_) and creates a new column with the names of the rows into _name_ and the corresponding correlation to another new column called _correlation_.  
+The output of the matrix is displayed using `distinct` to avoid redundancy, since every correlation in the matrix appears twice. `Keep_all` ensures that the corresponding _rowname_ and _name_ still appear in the output.  
+
+```{r}
+cordata <-data %>% rename(comments=comment_count) %>% na.omit%>%select_if(is.numeric)
+
+cordata2<-cor(cordata)%>%as.data.frame%>%
+rownames_to_column%>%
+pivot_longer(-1,names_to="name",values_to="correlation") %>% arrange(desc(correlation)) 
+
+distinct(cordata2, correlation, .keep_all = TRUE)
+```
+
+While it makes sense that comments and likes have a high correlation (since viewers probably wish to express their love for the video in comment form), it is interesting to see that there is also a slightly higher correlation of dislikes and comments. It appears that people tend to be vocal about their distaste for a video.
+Furthermore, there seems to be a high correlation between likes and views, but not dislikes and views. This could speak to how videos with positive reactions tend to be shared more often.
+There is not really a correlation between likes and dislikes, since people are only able to choose one or the other. 
+
+##### Were the least liked videos at this time the same in the US and Canada?
+
+To determine whether a video is listed as "trending," YouTube uses four metrics, which include view count, the "temperature" of the video (which is simply how quickly it is generating views), where the views are coming from, and how old the video is.
+
+According to Google's support website, these "produce a list of videos that showcases what’s happening on YouTube, while being relevant to [its] viewers and reflective of the content on the platform."
+
+Here, we compare the view count to a new variable called LTD, which is simply the proportion of likes a video has to the total amount of ratings (the sum of likes and dislikes). This was created using the `mutate` function. The origin of the datapoint was `filtered` to specify which country (US or Canada) we wanted to observe. Then, the variables _channel_title_, _title_, _views_, _LTD_, and _trending_date_ were `selected`, and the data was arranged by increasing _LTD_. 
+
+```{r}
+data %>% mutate(LTD=likes/(likes+dislikes)) %>% filter(origin=="US") %>% group_by(category_title) %>% select(category_title, channel_title, title, views, LTD, ratings_disabled) %>% arrange(LTD)%>% distinct(title, .keep_all = TRUE) %>% head
+
+data %>% mutate(LTD=likes/(likes+dislikes)) %>% filter(origin=="CA") %>% group_by(category_title) %>% select(channel_title, title, views, LTD, ratings_disabled) %>% arrange(LTD)%>% distinct(title, .keep_all = TRUE) %>% head
+
+```
+We can see that, when `arranged` by LTD, the videos that had the lowest proportion of likes was not the same between the two countries. The most disliked video in the United States during this time span, with no likes, was by Rob Andretti. This does not mean that ratings were not allowed for the video, as evidenced by the _ratings_disabled_ variable (where FALSE means ratings were allowed.) However, this video had a very low number of views compared to the others in the list. The Rob Andretti Video did not appear in Canada's trending page. The least popular video in Canada was the second least popular in the US (PSA from Chairman of the FCC Ajit Pai). This is most likely due to factoring in the location from which the views come from.
+
+It does not make sense, however, that ratings are not accounted for when dictating what appears on the Trending page. Upon closer inspection, the Rob Andretti video no longer exists on YouTube. Perhaps it was so unpopular that it was (later) removed?
+
+
+### `r emo::ji("rainbow")` Visualizing `r emo::ji("bar_chart")`  
+
+##### Which Categories Were The Most Popular By Country?
+
+In these graphs, an NA category is present, which I take to assume was assigned to videos that did not have a chosen category (implicit NA's.)  
+
+The overall trend in both countries' trending videos is that the "People and Blogs"" category is the most popular (which makes sense, since it acts as a catchall for the content people tend to post on the website). In the US, this is followed closely by "Film and Animation," but in Canada this differs, where people prefer "Shows." The distribution of content is not similar in both countries, with some categories completely missing videos. The Canadian distribution also has fewer mean views overall.
+
+
+```{R}
+ 
+data %>% ggplot(aes(x=category_title, y=views, fill=category_title)) + geom_bar(stat="summary", fun.y="mean") + facet_wrap(~origin) + theme_minimal()+theme(axis.text.x = element_text(angle=45, hjust=1), legend.position = "none") + ggtitle("Popularity of Categories in Trending Videos by Country (Based on Views)") + xlab("Category") + ylab("Mean Views") 
+```
+
+##### Correlation Heatmap
+Below is a correlation heatmap of the matrix generated earlier. As described previously, there is a high correlation between likes and views because people that positively react to videos may tend to want to share them more. There is a similarly high correlation between comments and likes (users may wish to express their appreciation for videos through comments?)
+However, there is also a slightly high correlation between dislikes and comments. I guessed that this was because people tend to be vocal about their distaste in what they watch. 
+
+```{r}
+cordata2%>%ggplot(aes(rowname,name,fill=correlation))+
+geom_tile()+ theme_bw() +
+scale_fill_gradient2(low="pink",mid="blue",high="white")+
+geom_text(aes(label=round(correlation,2)),color = "black", size = 4)+ 
+theme(axis.text.x = element_text(angle = 90, hjust = 1))+
+coord_fixed() +ggtitle("Correlation Heatmap of YouTube Trending Videos")
+
+```
+
+
+### `r emo::ji("sunglasses")` Dimensionality Reduction `r emo::ji("sparkles")`  
+
+Here we are running a PCA to look at how the numeric variables correlate with each other. First I selected for only numeric variables and applied `scale` so that they would all be on the same scale. I saved this as a separate dataframe and used `princomp` to run a PCA. Then I looked at the contents of _pca_data_ with `names`, and used `summary ` to observe the standard variation and the cumulative proportion. 
+
+```{R}
+numeric_data<-data%>%select_if(is.numeric)%>%scale
+pca_data<-princomp(numeric_data)
+names(pca_data)
+
+summary(pca_data, loadings = T)
+```
+The first principle component may be one that describes the overall popularity of the video, while the second principle component might distinguish by how favorably the video was viewed by YouTube users. The third and fourth principle components do not really account for much variance, since the cumulative proportion after two components was already at 0.906.
+
+Okay, so here's a plot of loadings for this PCA. From _pca_data_, all of the rows and the first two columns were selected and turned into a dataframe. (I feel like it's important to add here that I didn't write the code for the following plots, I copied and pasted them from the slides)
+
+As described above, the first principle component distinguishes overall popularity (measured by likes, views, and comments for the most part). For PC2 we can see that (as expected) likes and dislikes have opposite correlations. Views seem to correlate with likes (as described earlier, people may be more willing to share videos that they have liked.) On the other hand, videos that have more dislikes correlate with more comments (maybe because people like to be vocal about what they do not like.)
+
+
+```{r}
+pca_data$loadings[1:4,1:2]%>%as.data.frame%>%rownames_to_column%>%
+ggplot()+geom_hline(aes(yintercept=0),lty=2)+
+geom_vline(aes(xintercept=0),lty=2)+ylab("PC2")+xlab("PC1")+
+geom_segment(aes(x=0,y=0,xend=Comp.1,yend=Comp.2),arrow=arrow(),col="red")+
+geom_label(aes(x=Comp.1*1.1,y=Comp.2*1.1,label=rowname))+ ggtitle("Plot of Loadings for YouTube PCA")
+```
+
+Here's a plot of what this looks like. What's happening here, you ask? Pretty much exactly what was described beforehand. My thoughts were that PC1 distinguishes overall popularity, while PC2 distinguishes the reception of the video. This graph is just centered differently, due to some videos that really score low on PC2. 
+```{R}
+ggplot()+geom_point(aes(pca_data$scores[,1], pca_data$scores[,2]))+xlab("PC1")+ylab("PC2") + ggtitle("Plot of PC Scores for YouTube PCA")
+```

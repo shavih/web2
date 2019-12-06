@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Chris Turner</title>
+    <title>Posts on Scout&#39;s World</title>
     <link>/post/</link>
-    <description>Recent content in Posts on Chris Turner</description>
+    <description>Recent content in Posts on Scout&#39;s World</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 04 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 06 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>dfghkjnlkm,;</title>
-      <link>/2019/12/04/somethign-dsfjskdf/</link>
-      <pubDate>Wed, 04 Dec 2019 00:00:00 +0000</pubDate>
+      <title>blog psot</title>
+      <link>/2019/12/06/blog-psot/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>/2019/12/04/somethign-dsfjskdf/</guid>
-      <description> #wow look a markdown file
-4 ## [1] 4 </description>
+      <guid>/2019/12/06/blog-psot/</guid>
+      <description></description>
     </item>
     
   </channel>

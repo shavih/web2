@@ -6,19 +6,28 @@
     <description>Recent content on Scout&#39;s World</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Wed, 04 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 06 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Welcome To Scout&#39;s Racism Counter</title>
-      <link>/blog/somethign-dsfjskdf/</link>
-      <pubDate>Wed, 04 Dec 2019 00:00:00 +0000</pubDate>
+      <title>ACTUAL blog post</title>
+      <link>/blog/actual-blog-post/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>/blog/somethign-dsfjskdf/</guid>
-      <description> Scout’s Racist Log
-#Number of Racisms #Committed This Year 4 ## [1] 4 </description>
+      <guid>/blog/actual-blog-post/</guid>
+      <description> I fucking love uhhhhh being a dog every day I bark at people and commit crimes
+ </description>
+    </item>
+    
+    <item>
+      <title>blog psot</title>
+      <link>/2019/12/06/blog-psot/</link>
+      <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/12/06/blog-psot/</guid>
+      <description></description>
     </item>
     
     <item>
@@ -31,14 +40,22 @@
     </item>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/blog/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>EDA Project</title>
+      <link>/eda/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/blog/2015-07-23-r-rmarkdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/eda/</guid>
+      <description>Shavi Hewage (SH42727)  SDS 348 Computational Biology  October 20, 2019  🇨🇦 Introduction 🇺🇸 In recent years, the YouTube Trending page has been one of the more controversial topics amongst users of the site. This is mostly because the manner in which videos appear on the Trending page is a mystery (in 2018, for example, the website Polygon wrote an article about the controversy surrounding offensive videos surfacing on this page).</description>
+    </item>
+    
+    <item>
+      <title>Projects</title>
+      <link>/projects/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/projects/</guid>
+      <description> Projects Project 1
+ </description>
     </item>
     
   </channel>

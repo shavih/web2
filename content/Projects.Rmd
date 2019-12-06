@@ -1,0 +1,14 @@
+---
+title: "Projects"
+author: "Shavi Hewage, SH42727"
+date: "12/6/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Projects
+
+[Project 1](/EDA)

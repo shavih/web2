@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Scout" />
+    <meta name="description" content="it&#39;s scout&#39;s world and we&#39;re all living in it">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>EDA Project</title>
+    <meta name="generator" content="Hugo 0.60.1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="/blog/">BLOG</a></li>
+        
+        <li><a href="/projects/">ACTS OF RACISM</a></li>
+        
+        <li><a href="/resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="/eda/">EDA Project</a></strong>
+          </h3>
+        </div>
+        <div class="blog-title">
+          <h4>
+          January 1, 0001
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<div id="shavi-hewage-sh42727" class="section level5">
+<h5><em>Shavi Hewage (SH42727)</em></h5>
+</div>
+<div id="sds-348-computational-biology" class="section level5">
+<h5><em>SDS 348 Computational Biology</em></h5>
+</div>
+<div id="october-20-2019" class="section level5">
+<h5><em>October 20, 2019</em></h5>
+</div>
+<div id="introduction" class="section level3">
+<h3>🇨🇦 Introduction 🇺🇸</h3>
+<p>In recent years, the YouTube Trending page has been one of the more controversial topics amongst users of the site. This is mostly because the manner in which videos appear on the Trending page is a mystery (in 2018, for example, the website Polygon wrote an <a href="https://www.polygon.com/2018/2/21/17035758/how-does-youtube-trending-work-parkland">article</a> about the controversy surrounding offensive videos surfacing on this page).<br />
+I chose this particular dataset because I spend a lot of time on YouTube, and I was curious to see how Trending videos differ by country. I always assumed that it would be similar (at least between the United States and Canada, since the culture of these countries is essentially alike.) I also wanted to look at how various factors contributed to the success of a video (and its subsequent appearance on the Trending page.)</p>
+<p>The following project explores the videos that appear on the Trending page of YouTube in the United States, compared to the YouTube trending page of our northern neighbors (Canada). The dataset was acquired from <a href="%22https://www.kaggle.com/datasnaek/youtube-new/data#%22">Kaggle</a>, and contains variables that identify the name of the video (by title and unique ID), the channel which posted it, the date on which it was trending, the date and time it was published, a link to the thumbnail of the video, the tags, and the description of the video.<br />
+In addition, it contains the amount of views the video recieved, as well as the amount of likes, dislikes, and comments. Furthermore, it specifies if the video was removed at any time, if ratings were disabled, and if comments were disabled.<br />
+Finally, there is also a category_ID, which is a number that corresponds to a category of YouTube video. This will be matched to the name of the category from a separate file that was acquired alongside the data.</p>
+<p>This data was originally collected using a script that “[scraped] the most relevant information from videos that [were] currently trending on YouTube.” The data spans between November of 2017 and May of 2018.</p>
+</div>
+<div id="loading-packages-and-data" class="section level3">
+<h3>📺Loading Packages and Data📝</h3>
+<p>In this chunk, I read in the data and packages that are being used for the rest of the project. In the original dataset, categories were listed under “category ID,” which was a number. However, I wanted the names of the categories that corresponded to the number, which were included in a separate JSON file.<br />
+I did not write the code that retrieved the category title from the category ID number. I used code by Eddie Cano from <a href="https://www.kaggle.com/datasnaek/youtube-new/discussion/50240#331078">here</a>.</p>
+<pre class="r"><code># LOAD PACKAGES
+library(tidyverse)
+library(ggplot2)
+library(rjson)
+
+# LOAD DATA
+USvideos &lt;- read.csv(&quot;/Users/shavihewage/Downloads/youtube-new/USvideos.csv&quot;)
+categories.us &lt;- fromJSON(file = &quot;/Users/Shavihewage/Downloads/youtube-new/US_category_id.json&quot;)
+CAvideos &lt;- read.csv(&quot;/Users/shavihewage/Downloads/youtube-new/CAvideos.csv&quot;)
+categories.ca &lt;- fromJSON(file = &quot;/Users/Shavihewage/Downloads/youtube-new/CA_category_id.json&quot;)
+
+# RECOVERING VIDEO CATEGORIES
+cat.dict &lt;- sapply(categories.us$items, FUN = function(l) {
+    id &lt;- l$id
+    category &lt;- l$snippet$title
+    return(c(id, category))
+})
+
+cat.dict &lt;- data.frame(t(cat.dict))
+colnames(cat.dict) &lt;- c(&quot;category_id&quot;, &quot;category_title&quot;)
+cat.dict$category_id &lt;- as.numeric(cat.dict$category_id)
+rownames(cat.dict) &lt;- cat.dict$category_id
+
+cat.dict2 &lt;- sapply(categories.ca$items, FUN = function(l) {
+    id &lt;- l$id
+    category &lt;- l$snippet$title
+    return(c(id, category))
+})
+
+cat.dict2 &lt;- data.frame(t(cat.dict2))
+colnames(cat.dict2) &lt;- c(&quot;category_id&quot;, &quot;category_title&quot;)
+cat.dict2$category_id &lt;- as.numeric(cat.dict2$category_id)
+rownames(cat.dict2) &lt;- cat.dict2$category_id
+
+# ASSIGNING CATEGORIES TO VIDEOS
+USvideos$category_title &lt;- cat.dict[USvideos$category_id, ]$category_title
+CAvideos$category_title &lt;- cat.dict2[CAvideos$category_id, ]$category_title</code></pre>
+</div>
+<div id="tidying-and-joining" class="section level3">
+<h3>🧹Tidying and Joining 🔗</h3>
+<p>In the above chunk, I first started out by removing some variables I was not going to be using (<em>category_ID</em>, along with <em>description</em>, the date/time of publishing (<em>publish_time</em>), and a link to the thumbnail of the video, <em>thumbnail_link</em>)<br />
+Then, I added a new variable that specified the country in which the video was trending, called <em>origin</em>.</p>
+<pre class="r"><code># United States
+US2 &lt;- USvideos %&gt;% select(-c(&quot;thumbnail_link&quot;, &quot;description&quot;, &quot;category_id&quot;, &quot;tags&quot;, 
+    &quot;publish_time&quot;)) %&gt;% mutate(origin = &quot;US&quot;)
+
+# Canada
+CA2 &lt;- CAvideos %&gt;% select(-c(&quot;thumbnail_link&quot;, &quot;category_id&quot;, &quot;tags&quot;, &quot;publish_time&quot;, 
+    &quot;description&quot;)) %&gt;% mutate(origin = &quot;CA&quot;)</code></pre>
+</div>
+<div id="section" class="section level1">
+<h1></h1>
+</div>
+<div id="section-1" class="section level1">
+<h1></h1>
+<p>In this step I combined the data for trending videos in the United States with the data for trending videos in Canada. I used a full join because I wanted to be able to see the differences between the two countries’ trending videos. Therefore, there were no variables dropped during the join. However, the United States trending data did have about 100 more variables than its Canadian counterpart.
+In order to make it so that the variables did not auto-suffix, I specified all the variable names in <code>by=</code>.</p>
+<pre class="r"><code>glimpse(data)</code></pre>
+<pre><code>## Observations: 81,830
+## Variables: 13
+## $ video_id               &lt;chr&gt; &quot;2kyS6SvSYSE&quot;, &quot;1ZAPwfrtAFY&quot;, &quot;5qpjK5DgCt4&quot;, &quot;…
+## $ trending_date          &lt;fct&gt; 17.14.11, 17.14.11, 17.14.11, 17.14.11, 17.14.…
+## $ title                  &lt;chr&gt; &quot;WE WANT TO TALK ABOUT OUR MARRIAGE&quot;, &quot;The Tru…
+## $ channel_title          &lt;chr&gt; &quot;CaseyNeistat&quot;, &quot;LastWeekTonight&quot;, &quot;Rudy Mancu…
+## $ views                  &lt;int&gt; 748374, 2418783, 3191434, 343168, 2095731, 119…
+## $ likes                  &lt;int&gt; 57527, 97185, 146033, 10172, 132235, 9763, 159…
+## $ dislikes               &lt;int&gt; 2966, 6146, 5339, 666, 1989, 511, 2445, 778, 1…
+## $ comment_count          &lt;int&gt; 15954, 12703, 8181, 2146, 17518, 1434, 1970, 3…
+## $ comments_disabled      &lt;fct&gt; False, False, False, False, False, False, Fals…
+## $ ratings_disabled       &lt;fct&gt; False, False, False, False, False, False, Fals…
+## $ video_error_or_removed &lt;fct&gt; False, False, False, False, False, False, Fals…
+## $ category_title         &lt;chr&gt; &quot;Comedy&quot;, &quot;Drama&quot;, &quot;Documentary&quot;, &quot;Drama&quot;, &quot;Dr…
+## $ origin                 &lt;chr&gt; &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;, &quot;US&quot;…</code></pre>
+<div id="wrangling" class="section level3">
+<h3>🐎 Wrangling 🤠</h3>
+<p>In this chunk, I’m generating summary statistics. For each numeric variable ( <em>views</em>, <em>comment_count</em> , <em>likes</em>, and <em>dislikes</em>), statistics that are being summarized are mean, standard deviation, counts, quantiles (which include the minimum and maximum value, and the median), the number of distinct observations, and a correlation matrix.</p>
+<p>This first chunk summarizes the four numeric variables in the dataset overall.</p>
+<pre class="r"><code>#OVERALL
+VLDC &lt;- data %&gt;% rename(comms=comment_count) %&gt;%
+  summarize(counts=n(), distinct_vids=n_distinct(views),
+            mean_views=mean(views), sd_views = sd(views),
+            median_views=median(views),min_views=min(views), max_views=max(views),
+           
+            mean_likes=mean(likes), sd_likes = sd(likes),median_likes=median(likes),
+            min_likes=min(likes), max_likes=max(likes),
+            
+            mean_dislikes=mean(dislikes), sd_dislikes = sd(dislikes),median_dislikes=median(dislikes),
+            min_dislikes=min(dislikes), max_dislikes=max(dislikes),
+            
+            mean_comments=mean(comms), sd_comments = sd(comms),median_comments=median(comms),
+            min_comments=min(comms), max_comments=max(comms))
+glimpse(VLDC)</code></pre>
+<pre><code>## Observations: 1
+## Variables: 22
+## $ counts          &lt;int&gt; 81830
+## $ distinct_vids   &lt;int&gt; 75352
+## $ mean_views      &lt;dbl&gt; 1754415
+## $ sd_views        &lt;dbl&gt; 5785451
+## $ median_views    &lt;dbl&gt; 496160
+## $ min_views       &lt;int&gt; 549
+## $ max_views       &lt;int&gt; 225211923
+## $ mean_likes      &lt;dbl&gt; 56939.11
+## $ sd_likes        &lt;dbl&gt; 187915.6
+## $ median_likes    &lt;dbl&gt; 12834
+## $ min_likes       &lt;int&gt; 0
+## $ max_likes       &lt;int&gt; 5613827
+## $ mean_dislikes   &lt;dbl&gt; 2861.005
+## $ sd_dislikes     &lt;dbl&gt; 24554.8
+## $ median_dislikes &lt;dbl&gt; 438
+## $ min_dislikes    &lt;int&gt; 0
+## $ max_dislikes    &lt;int&gt; 1674420
+## $ mean_comments   &lt;dbl&gt; 6746.303
+## $ sd_comments     &lt;dbl&gt; 30604.27
+## $ median_comments &lt;dbl&gt; 1550
+## $ min_comments    &lt;int&gt; 0
+## $ max_comments    &lt;int&gt; 1361580</code></pre>
+<div id="correlation-of-numeric-variables" class="section level5">
+<h5>Correlation of Numeric Variables</h5>
+<p>A correlation matrix was generated using <code>cor</code>, and then converted to a dataframe. <code>Rownames_to_column</code> creates a new column out of the names of the rows. Then, <code>pivot_longer</code> takes the names of all the columns (except the first, which is <em>rowname</em>) and creates a new column with the names of the rows into <em>name</em> and the corresponding correlation to another new column called <em>correlation</em>.<br />
+The output of the matrix is displayed using <code>distinct</code> to avoid redundancy, since every correlation in the matrix appears twice. <code>Keep_all</code> ensures that the corresponding <em>rowname</em> and <em>name</em> still appear in the output.</p>
+<pre class="r"><code>cordata &lt;- data %&gt;% rename(comments = comment_count) %&gt;% na.omit %&gt;% select_if(is.numeric)
+
+cordata2 &lt;- cor(cordata) %&gt;% as.data.frame %&gt;% rownames_to_column %&gt;% pivot_longer(-1, 
+    names_to = &quot;name&quot;, values_to = &quot;correlation&quot;) %&gt;% arrange(desc(correlation))
+
+distinct(cordata2, correlation, .keep_all = TRUE)</code></pre>
+<pre><code>## # A tibble: 7 x 3
+##   rowname  name     correlation
+##   &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+## 1 views    views          1    
+## 2 views    likes          0.843
+## 3 likes    comments       0.812
+## 4 dislikes comments       0.684
+## 5 views    comments       0.632
+## 6 views    dislikes       0.487
+## 7 likes    dislikes       0.451</code></pre>
+<p>While it makes sense that comments and likes have a high correlation (since viewers probably wish to express their love for the video in comment form), it is interesting to see that there is also a slightly higher correlation of dislikes and comments. It appears that people tend to be vocal about their distaste for a video.
+Furthermore, there seems to be a high correlation between likes and views, but not dislikes and views. This could speak to how videos with positive reactions tend to be shared more often.
+There is not really a correlation between likes and dislikes, since people are only able to choose one or the other.</p>
+</div>
+<div id="were-the-least-liked-videos-at-this-time-the-same-in-the-us-and-canada" class="section level5">
+<h5>Were the least liked videos at this time the same in the US and Canada?</h5>
+<p>To determine whether a video is listed as “trending,” YouTube uses four metrics, which include view count, the “temperature” of the video (which is simply how quickly it is generating views), where the views are coming from, and how old the video is.</p>
+<p>According to Google’s support website, these “produce a list of videos that showcases what’s happening on YouTube, while being relevant to [its] viewers and reflective of the content on the platform.”</p>
+<p>Here, we compare the view count to a new variable called LTD, which is simply the proportion of likes a video has to the total amount of ratings (the sum of likes and dislikes). This was created using the <code>mutate</code> function. The origin of the datapoint was <code>filtered</code> to specify which country (US or Canada) we wanted to observe. Then, the variables <em>channel_title</em>, <em>title</em>, <em>views</em>, <em>LTD</em>, and <em>trending_date</em> were <code>selected</code>, and the data was arranged by increasing <em>LTD</em>.</p>
+<pre class="r"><code>data %&gt;% mutate(LTD = likes/(likes + dislikes)) %&gt;% filter(origin == &quot;US&quot;) %&gt;% group_by(category_title) %&gt;% 
+    select(category_title, channel_title, title, views, LTD, ratings_disabled) %&gt;% 
+    arrange(LTD) %&gt;% distinct(title, .keep_all = TRUE) %&gt;% head</code></pre>
+<pre><code>## # A tibble: 6 x 6
+## # Groups:   category_title [3]
+##   category_title   channel_title  title            views    LTD ratings_disabled
+##   &lt;chr&gt;            &lt;chr&gt;          &lt;chr&gt;            &lt;int&gt;  &lt;dbl&gt; &lt;fct&gt;           
+## 1 Nonprofits &amp; Ac… Rob Andretti   Kelly Oubre Pu… 2.20e3 0      False           
+## 2 Comedy           Daily Caller   PSA from Chair… 1.14e6 0.0399 False           
+## 3 Family           Washington Po… The FCC repeal… 9.85e5 0.0421 False           
+## 4 Comedy           J S            LuLaRoe Consul… 2.13e5 0.0437 False           
+## 5 Comedy           Roy Moore for… Judge Roy Moor… 6.04e5 0.0660 False           
+## 6 Nonprofits &amp; Ac… NBA Highlight… Devin Booker h… 2.05e4 0.0885 False</code></pre>
+<pre class="r"><code>data %&gt;% mutate(LTD = likes/(likes + dislikes)) %&gt;% filter(origin == &quot;CA&quot;) %&gt;% group_by(category_title) %&gt;% 
+    select(channel_title, title, views, LTD, ratings_disabled) %&gt;% arrange(LTD) %&gt;% 
+    distinct(title, .keep_all = TRUE) %&gt;% head</code></pre>
+<pre><code>## # A tibble: 6 x 6
+## # Groups:   category_title [2]
+##   category_title channel_title   title             views    LTD ratings_disabled
+##   &lt;chr&gt;          &lt;chr&gt;           &lt;chr&gt;             &lt;int&gt;  &lt;dbl&gt; &lt;fct&gt;           
+## 1 Documentary    Daily Caller    PSA from Chairm… 649781 0.0378 False           
+## 2 Foreign        Washington Post The FCC repeals… 985179 0.0421 False           
+## 3 Foreign        Wochit News     Cirque Du Solei…  65688 0.0489 False           
+## 4 Documentary    nft             d                 40959 0.0623 False           
+## 5 Documentary    Roy Moore for … Judge Roy Moore… 603783 0.0660 False           
+## 6 Foreign        TIME            FCC Has Voted T… 349669 0.0680 False</code></pre>
+<p>We can see that, when <code>arranged</code> by LTD, the videos that had the lowest proportion of likes was not the same between the two countries. The most disliked video in the United States during this time span, with no likes, was by Rob Andretti. This does not mean that ratings were not allowed for the video, as evidenced by the <em>ratings_disabled</em> variable (where FALSE means ratings were allowed.) However, this video had a very low number of views compared to the others in the list. The Rob Andretti Video did not appear in Canada’s trending page. The least popular video in Canada was the second least popular in the US (PSA from Chairman of the FCC Ajit Pai). This is most likely due to factoring in the location from which the views come from.</p>
+<p>It does not make sense, however, that ratings are not accounted for when dictating what appears on the Trending page. Upon closer inspection, the Rob Andretti video no longer exists on YouTube. Perhaps it was so unpopular that it was (later) removed?</p>
+</div>
+</div>
+<div id="visualizing" class="section level3">
+<h3>🌈 Visualizing 📊</h3>
+<div id="which-categories-were-the-most-popular-by-country" class="section level5">
+<h5>Which Categories Were The Most Popular By Country?</h5>
+<p>In these graphs, an NA category is present, which I take to assume was assigned to videos that did not have a chosen category (implicit NA’s.)</p>
+<p>The overall trend in both countries’ trending videos is that the “People and Blogs”&quot; category is the most popular (which makes sense, since it acts as a catchall for the content people tend to post on the website). In the US, this is followed closely by “Film and Animation,” but in Canada this differs, where people prefer “Shows.” The distribution of content is not similar in both countries, with some categories completely missing videos. The Canadian distribution also has fewer mean views overall.</p>
+<pre class="r"><code>data %&gt;% ggplot(aes(x = category_title, y = views, fill = category_title)) + geom_bar(stat = &quot;summary&quot;, 
+    fun.y = &quot;mean&quot;) + facet_wrap(~origin) + theme_minimal() + theme(axis.text.x = element_text(angle = 45, 
+    hjust = 1), legend.position = &quot;none&quot;) + ggtitle(&quot;Popularity of Categories in Trending Videos by Country (Based on Views)&quot;) + 
+    xlab(&quot;Category&quot;) + ylab(&quot;Mean Views&quot;)</code></pre>
+<p><img src="/EDA_files/figure-html/unnamed-chunk-8-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+<div id="correlation-heatmap" class="section level5">
+<h5>Correlation Heatmap</h5>
+<p>Below is a correlation heatmap of the matrix generated earlier. As described previously, there is a high correlation between likes and views because people that positively react to videos may tend to want to share them more. There is a similarly high correlation between comments and likes (users may wish to express their appreciation for videos through comments?)
+However, there is also a slightly high correlation between dislikes and comments. I guessed that this was because people tend to be vocal about their distaste in what they watch.</p>
+<pre class="r"><code>cordata2 %&gt;% ggplot(aes(rowname, name, fill = correlation)) + geom_tile() + theme_bw() + 
+    scale_fill_gradient2(low = &quot;pink&quot;, mid = &quot;blue&quot;, high = &quot;white&quot;) + geom_text(aes(label = round(correlation, 
+    2)), color = &quot;black&quot;, size = 4) + theme(axis.text.x = element_text(angle = 90, 
+    hjust = 1)) + coord_fixed() + ggtitle(&quot;Correlation Heatmap of YouTube Trending Videos&quot;)</code></pre>
+<p><img src="/EDA_files/figure-html/unnamed-chunk-9-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="dimensionality-reduction" class="section level3">
+<h3>😎 Dimensionality Reduction ✨</h3>
+<p>Here we are running a PCA to look at how the numeric variables correlate with each other. First I selected for only numeric variables and applied <code>scale</code> so that they would all be on the same scale. I saved this as a separate dataframe and used <code>princomp</code> to run a PCA. Then I looked at the contents of <em>pca_data</em> with <code>names</code>, and used <code>summary</code> to observe the standard variation and the cumulative proportion.</p>
+<pre class="r"><code>numeric_data &lt;- data %&gt;% select_if(is.numeric) %&gt;% scale
+pca_data &lt;- princomp(numeric_data)
+names(pca_data)</code></pre>
+<pre><code>## [1] &quot;sdev&quot;     &quot;loadings&quot; &quot;center&quot;   &quot;scale&quot;    &quot;n.obs&quot;    &quot;scores&quot;   &quot;call&quot;</code></pre>
+<pre class="r"><code>summary(pca_data, loadings = T)</code></pre>
+<pre><code>## Importance of components:
+##                           Comp.1    Comp.2     Comp.3     Comp.4
+## Standard deviation     1.7236578 0.8087824 0.55520990 0.25800778
+## Proportion of Variance 0.7427581 0.1635342 0.07706545 0.01664221
+## Cumulative Proportion  0.7427581 0.9062923 0.98335779 1.00000000
+## 
+## Loadings:
+##               Comp.1 Comp.2 Comp.3 Comp.4
+## views          0.503  0.418  0.630  0.419
+## likes          0.531  0.413 -0.232 -0.702
+## dislikes       0.430 -0.791  0.353 -0.257
+## comment_count  0.529 -0.171 -0.652  0.515</code></pre>
+<p>The first principle component may be one that describes the overall popularity of the video, while the second principle component might distinguish by how favorably the video was viewed by YouTube users. The third and fourth principle components do not really account for much variance, since the cumulative proportion after two components was already at 0.906.</p>
+<p>Okay, so here’s a plot of loadings for this PCA. From <em>pca_data</em>, all of the rows and the first two columns were selected and turned into a dataframe. (I feel like it’s important to add here that I didn’t write the code for the following plots, I copied and pasted them from the slides)</p>
+<p>As described above, the first principle component distinguishes overall popularity (measured by likes, views, and comments for the most part). For PC2 we can see that (as expected) likes and dislikes have opposite correlations. Views seem to correlate with likes (as described earlier, people may be more willing to share videos that they have liked.) On the other hand, videos that have more dislikes correlate with more comments (maybe because people like to be vocal about what they do not like.)</p>
+<pre class="r"><code>pca_data$loadings[1:4, 1:2] %&gt;% as.data.frame %&gt;% rownames_to_column %&gt;% ggplot() + 
+    geom_hline(aes(yintercept = 0), lty = 2) + geom_vline(aes(xintercept = 0), lty = 2) + 
+    ylab(&quot;PC2&quot;) + xlab(&quot;PC1&quot;) + geom_segment(aes(x = 0, y = 0, xend = Comp.1, yend = Comp.2), 
+    arrow = arrow(), col = &quot;red&quot;) + geom_label(aes(x = Comp.1 * 1.1, y = Comp.2 * 
+    1.1, label = rowname)) + ggtitle(&quot;Plot of Loadings for YouTube PCA&quot;)</code></pre>
+<p><img src="/EDA_files/figure-html/unnamed-chunk-11-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Here’s a plot of what this looks like. What’s happening here, you ask? Pretty much exactly what was described beforehand. My thoughts were that PC1 distinguishes overall popularity, while PC2 distinguishes the reception of the video. This graph is just centered differently, due to some videos that really score low on PC2.</p>
+<pre class="r"><code>ggplot() + geom_point(aes(pca_data$scores[, 1], pca_data$scores[, 2])) + xlab(&quot;PC1&quot;) + 
+    ylab(&quot;PC2&quot;) + ggtitle(&quot;Plot of PC Scores for YouTube PCA&quot;)</code></pre>
+<p><img src="/EDA_files/figure-html/unnamed-chunk-12-1.png" width="768" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+
+              <hr>
+              <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div>
+            </div>
+          </div>
+          <hr>
+        <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+        </div>
+      </div>
+      
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="/js/docs.min.js"></script>
+<script src="/js/main.js"></script>
+
+<script src="/js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>
